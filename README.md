@@ -18,3 +18,4 @@ The site is a static export (`output: "export"`), deployed to Cloudflare Workers
 - Connect the quote form (`src/components/QuoteForm.tsx`) to email/backend — it is front-end only now.
 
 All copy lives in `src/lib/content.ts` (Swedish and Finnish).
+Demo for KMS
