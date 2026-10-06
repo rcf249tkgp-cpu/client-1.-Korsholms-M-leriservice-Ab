@@ -1,17 +1,26 @@
 @import "tailwindcss";
 
-/* KMS palette: logo lime, charcoal, white. Lime is used as a fill;
-   moss is the text-safe green on white (≈6:1 contrast). */
+/* KMS design tokens.
+   Mostly paper, charcoal and one soft stone neutral. The logo lime is an accent
+   only: buttons, small markers. Moss is the text-safe green on light (≈6:1). */
 @theme {
-  --color-lime: #8dc63f;
-  --color-lime-soft: #e7f3d4;
-  --color-moss: #3d6b10;
+  --color-paper: #f3f3ef;
+  --color-paper-deep: #e9e8e2;
+  --color-stone: #cfccc3;
+  --color-line: #dcdad3;
   --color-charcoal: #1f2328;
-  --color-ink: #2d3238;
-  --color-slate: #5a6068;
-  --color-paper: #f2f4f0;
-  --color-line: #dde1da;
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --color-coal: #17191d;
+  --color-ink: #33373d;
+  --color-slate: #62656a;
+  --color-lime: #8dc63f;
+  --color-lime-hover: #9fd257;
+  --color-moss: #3d6b10;
+
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-mark: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html {
@@ -25,9 +34,11 @@ html {
 }
 
 body {
-  background: #ffffff;
+  background: var(--color-paper);
   color: var(--color-charcoal);
   font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
 }
 
 h1,
@@ -38,33 +49,166 @@ h3 {
 }
 
 section[id] {
-  scroll-margin-top: 4.5rem;
+  scroll-margin-top: 5rem;
 }
 
-/* Wide display cut of Archivo for headings and the logo. */
-.font-wide {
-  font-stretch: 118%;
-}
-.font-xwide {
-  font-stretch: 125%;
-}
+/* Component classes live in the components layer so Tailwind utilities can override them. */
+@layer components {
+  /* Display serif: tight tracking, optical size for large settings. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    font-variation-settings: "opsz" 72;
+    text-wrap: balance;
+  }
 
-:focus-visible {
-  outline: 3px solid var(--color-moss);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-.on-dark :focus-visible {
-  outline-color: var(--color-lime);
-}
+  /* Wide cut of Archivo for the KMS wordmark. */
+  .font-xwide {
+    font-family: var(--font-mark);
+    font-stretch: 125%;
+  }
 
-/* Diagonal brush-texture for photo placeholders. */
-.placeholder-texture {
-  background-image: repeating-linear-gradient(
-    -35deg,
-    rgb(255 255 255 / 0.05) 0 2px,
-    transparent 2px 14px
-  );
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-moss);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--color-lime);
+  }
+
+  /* Film grain over large colour sections. Sits above the background, below content. */
+  .grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.09;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .grain-light::before {
+    opacity: 0.05;
+    mix-blend-mode: multiply;
+    filter: invert(1);
+  }
+
+  /* Shared photo treatment: one radius, a hairline inner edge, a faint tint. */
+  .photo {
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--color-paper-deep);
+  }
+  .photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 1px rgb(31 35 40 / 0.06);
+    background: linear-gradient(180deg, rgb(31 35 40 / 0) 60%, rgb(31 35 40 / 0.08));
+  }
+
+  /* Buttons: a fill that rises from below on hover. */
+  .btn {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 3.25rem;
+    padding: 0 1.6rem;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.35s var(--ease-out-soft), border-color 0.35s var(--ease-out-soft);
+  }
+  .btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transform: translateY(101%);
+    transition: transform 0.45s var(--ease-out-soft);
+    background: var(--btn-hover, var(--color-charcoal));
+  }
+  .btn:hover::before {
+    transform: translateY(0);
+  }
+  .btn svg {
+    transition: transform 0.35s var(--ease-out-soft);
+  }
+  .btn:hover svg {
+    transform: translateX(2px) rotate(-8deg);
+  }
+  .btn-lime {
+    background: var(--color-lime);
+    color: var(--color-charcoal);
+    --btn-hover: var(--color-lime-hover);
+  }
+  .btn-dark {
+    background: var(--color-charcoal);
+    color: #fff;
+    --btn-hover: var(--color-ink);
+  }
+  .btn-line {
+    border: 1px solid rgb(31 35 40 / 0.3);
+    color: var(--color-charcoal);
+    --btn-hover: var(--color-charcoal);
+  }
+  .btn-line:hover {
+    color: #fff;
+    border-color: var(--color-charcoal);
+  }
+  .btn-line-light {
+    border: 1px solid rgb(255 255 255 / 0.4);
+    color: #fff;
+    --btn-hover: #fff;
+  }
+  .btn-line-light:hover {
+    color: var(--color-charcoal);
+    border-color: #fff;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn::before,
+    .btn svg {
+      transition: none;
+    }
+  }
+
+  /* Text link with an underline that draws in. */
+  .link-draw {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.4s var(--ease-out-soft);
+  }
+  .link-draw:hover {
+    background-size: 100% 1px;
+  }
 }
 
 /* Hero paint backdrop (PaintBackdrop.tsx). The default, un-animated state is the

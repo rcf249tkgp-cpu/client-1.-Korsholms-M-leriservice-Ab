@@ -1,11 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo } from "next/font/google";
+import { Archivo, Newsreader, Schibsted_Grotesk } from "next/font/google";
 import "./globals.css";
 
+// Archivo is kept for the KMS wordmark only.
 const archivo = Archivo({
   variable: "--font-archivo",
   subsets: ["latin"],
   axes: ["wdth"],
+});
+
+// Display serif for headlines; optical sizing keeps it crisp at large sizes.
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin", "latin-ext"],
+  axes: ["opsz"],
+});
+
+// Body and UI text.
+const schibsted = Schibsted_Grotesk({
+  variable: "--font-schibsted",
+  subsets: ["latin", "latin-ext"],
 });
 
 export const metadata: Metadata = {
@@ -17,12 +31,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1f2328",
+  themeColor: "#f3f3ef",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="sv" className={`${archivo.variable} antialiased`}>
+    <html lang="sv" className={`${archivo.variable} ${newsreader.variable} ${schibsted.variable} antialiased`}>
       <body className="min-h-dvh">{children}</body>
     </html>
   );

@@ -26,6 +26,9 @@ export type ServiceKey =
 
 export type GalleryKey = "facade" | "church" | "lift" | "indoor" | "roof" | "wallpaper";
 
+// Alt text for the non-gallery photos (gallery photos use gallery.items).
+export type ImageKey = "hero" | "indoor" | "outdoor" | "church" | "advice" | "band" | "about";
+
 type Dict = {
   companyName: string;
   demo: string;
@@ -36,8 +39,8 @@ type Dict = {
   call: string;
   callShort: string;
   quote: string;
-  hero: { title: string; lead: string; callNote: string; imageLabel: string };
-  placeholder: string;
+  hero: { title: string; lead: string; callNote: string };
+  images: Record<ImageKey, string>;
   trust: { title: string; sub: string }[];
   services: {
     title: string;
@@ -49,11 +52,11 @@ type Dict = {
   churches: { title: string; lead: string; names: string[] };
   advice: { title: string; lead: string; points: string[]; motto: string };
   gallery: { title: string; note: string; items: Record<GalleryKey, string> };
+  photoCredit: string;
   about: {
     title: string;
     body: string[];
     facts: { label: string; value: string }[];
-    photo: string;
   };
   form: {
     title: string;
@@ -117,9 +120,16 @@ export const dict: Record<Lang, Dict> = {
       title: "Måleri i Korsholm sedan 1984",
       lead: "Inomhus- och utomhusmålning för hem, företag och kyrkor – från mindre renoveringar till stora nybyggen och fasader.",
       callNote: "Stig Beijar svarar på 0500 364 889",
-      imageLabel: "Fasadmålning med skylift",
     },
-    placeholder: "Platshållare",
+    images: {
+      hero: "Rödmålad träfasad med vita fönsterfoder",
+      indoor: "Målare i vita arbetskläder rollar ett innertak",
+      outdoor: "Träfasad och plåttak i solljus",
+      church: "Vit träkyrka med grönt tak och röd port",
+      advice: "Färgtråg, roller, pensel och färgprover",
+      band: "Målare på stege framför en nymålad vit vägg",
+      about: "Stege med färgtråg och målarroller",
+    },
     trust: [
       { title: "Sedan 1984", sub: "Familjeföretag i Vassor" },
       { title: "8 anställda", sub: "plus säsongsarbetare" },
@@ -160,7 +170,7 @@ export const dict: Record<Lang, Dict> = {
     },
     gallery: {
       title: "Bilder från våra jobb",
-      note: "Bilderna är platshållare och byts ut mot KMS egna foton.",
+      note: "Exempelbilder – de byts ut mot KMS egna foton.",
       items: {
         facade: "Fasadmålning",
         church: "Kyrkmålning",
@@ -170,6 +180,7 @@ export const dict: Record<Lang, Dict> = {
         wallpaper: "Tapetsering",
       },
     },
+    photoCredit: "Exempelbilder: Pexels",
     about: {
       title: "Ett familjeföretag från Vassor",
       body: [
@@ -182,7 +193,6 @@ export const dict: Record<Lang, Dict> = {
         { label: "Personal", value: "8 anställda + säsongsarbetare" },
         { label: "Skylifter", value: "3 st, den nyaste 23 m" },
       ],
-      photo: "Teambild",
     },
     form: {
       title: "Begär offert",
@@ -246,9 +256,16 @@ export const dict: Record<Lang, Dict> = {
       title: "Maalausta Mustasaaressa vuodesta 1984",
       lead: "Sisä- ja ulkomaalaukset koteihin, yrityksiin ja kirkkoihin – pienistä remonteista suuriin uudiskohteisiin ja julkisivuihin.",
       callNote: "Stig Beijar vastaa numerossa 0500 364 889",
-      imageLabel: "Julkisivumaalaus nostolavalta",
     },
-    placeholder: "Paikkamerkki",
+    images: {
+      hero: "Punaiseksi maalattu puujulkisivu ja valkoiset ikkunanpielet",
+      indoor: "Valkoisiin työvaatteisiin pukeutunut maalari telaa sisäkattoa",
+      outdoor: "Puujulkisivu ja peltikatto auringonvalossa",
+      church: "Valkoinen puukirkko, vihreä katto ja punainen ovi",
+      advice: "Maalikaukalo, tela, sivellin ja värimallit",
+      band: "Maalari tikkailla vastamaalatun valkoisen seinän edessä",
+      about: "Tikkaat, maalikaukalo ja maalitelat",
+    },
     trust: [
       { title: "Vuodesta 1984", sub: "Perheyritys Vassorista" },
       { title: "8 työntekijää", sub: "sekä kausityöntekijät" },
@@ -289,7 +306,7 @@ export const dict: Record<Lang, Dict> = {
     },
     gallery: {
       title: "Kuvia töistämme",
-      note: "Kuvat ovat paikkamerkkejä, ja ne vaihdetaan KMS:n omiin valokuviin.",
+      note: "Esimerkkikuvia – ne vaihdetaan KMS:n omiin valokuviin.",
       items: {
         facade: "Julkisivumaalaus",
         church: "Kirkon maalaus",
@@ -299,6 +316,7 @@ export const dict: Record<Lang, Dict> = {
         wallpaper: "Tapetointi",
       },
     },
+    photoCredit: "Esimerkkikuvat: Pexels",
     about: {
       title: "Perheyritys Vassorista",
       body: [
@@ -311,7 +329,6 @@ export const dict: Record<Lang, Dict> = {
         { label: "Henkilöstö", value: "8 työntekijää + kausityöntekijät" },
         { label: "Nostolavat", value: "3 kpl, uusin 23 m" },
       ],
-      photo: "Tiimikuva",
     },
     form: {
       title: "Pyydä tarjous",

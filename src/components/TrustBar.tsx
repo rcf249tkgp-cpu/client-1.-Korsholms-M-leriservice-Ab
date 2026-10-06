@@ -6,13 +6,18 @@ import { Reveal } from "./Reveal";
 export function TrustBar() {
   const { t } = useLang();
   return (
-    <section aria-label="KMS i korthet" className="on-dark bg-charcoal text-white">
-      <Reveal className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-        <ul className="grid grid-cols-2 gap-x-5 gap-y-7 lg:grid-cols-4">
-          {t.trust.map((item) => (
-            <li key={item.title} className="border-l-[3px] border-lime pl-4">
-              <p className="font-wide text-lg leading-snug font-bold sm:text-xl">{item.title}</p>
-              <p className="mt-1 text-sm text-white/70 sm:text-base">{item.sub}</p>
+    <section aria-label="KMS i korthet" className="mx-auto max-w-[90rem] px-5 sm:px-8 lg:px-12">
+      <Reveal>
+        <ul className="grid grid-cols-2 border-t border-line lg:grid-cols-4">
+          {t.trust.map((item, i) => (
+            <li
+              key={item.title}
+              className={`py-7 pr-4 sm:py-9 ${i % 2 === 1 ? "border-l border-line pl-5 sm:pl-8" : ""} ${
+                i > 1 ? "border-t border-line lg:border-t-0" : ""
+              } ${i === 2 ? "lg:border-l lg:pl-8" : ""} ${i === 1 ? "lg:pl-8" : ""}`}
+            >
+              <p className="display text-[1.35rem] leading-tight sm:text-[2rem]">{item.title}</p>
+              <p className="mt-2 text-[0.95rem] leading-snug text-slate">{item.sub}</p>
             </li>
           ))}
         </ul>

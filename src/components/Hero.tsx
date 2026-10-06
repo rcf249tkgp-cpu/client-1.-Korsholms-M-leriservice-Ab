@@ -1,86 +1,73 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { Phone } from "lucide-react";
+import { ArrowDownRight, Phone } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { company } from "@/lib/content";
-import { PaintBackdrop } from "./PaintBackdrop";
+import { photoProps } from "@/lib/images";
 
 const ease = [0.22, 1, 0.36, 1] as const;
-
-/** A single roller stroke in the logo lime, painted across on load. */
-function RollerStroke() {
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      aria-hidden
-      className="mt-5 w-full max-w-[34rem] sm:mt-7"
-      initial={reduce ? false : { clipPath: "inset(0 100% 0 0)" }}
-      animate={{ clipPath: "inset(0 0% 0 0)" }}
-      transition={{ duration: 1.1, ease, delay: 0.35 }}
-    >
-      <svg viewBox="0 0 600 44" className="block h-auto w-full" preserveAspectRatio="none">
-        <path
-          d="M6 13 C 90 5, 170 11, 250 8 S 430 3, 530 8 L 594 11 C 598 19, 596 28, 591 34 C 500 38, 400 35, 300 38 S 120 41, 32 37 L 7 33 C 2 26, 3 19, 6 13 Z"
-          fill="#8dc63f"
-        />
-        <path d="M30 17 C 200 13, 380 12, 570 15" stroke="#a6d662" strokeWidth="2" fill="none" opacity="0.8" />
-        <path d="M24 29 C 180 31, 400 27, 580 28" stroke="#79ad31" strokeWidth="2" fill="none" opacity="0.7" />
-      </svg>
-    </motion.div>
-  );
-}
 
 export function Hero() {
   const { t, lang } = useLang();
   const reduce = useReducedMotion();
+  const img = photoProps("hero");
   // Always pass initial/animate: the static HTML is rendered with the initial
   // (hidden) state, so dropping them for reduced motion would leave text invisible.
   const enter = (delay: number) => ({
-    initial: { opacity: 0, y: reduce ? 0 : 20 },
+    initial: { opacity: 0, y: reduce ? 0 : 22 },
     animate: { opacity: 1, y: 0 },
-    transition: reduce ? { duration: 0 } : { duration: 0.6, ease, delay },
+    transition: reduce ? { duration: 0 } : { duration: 0.9, ease, delay },
   });
 
   return (
-    <section id="top" className="on-dark relative isolate overflow-hidden bg-charcoal text-white">
-      <PaintBackdrop className="absolute inset-0 -z-10" />
-      {/* Readability scrim: solid behind the text, lighter where the paint shows. */}
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(20_23_26/0.62)_0%,rgb(20_23_26/0.78)_100%)] lg:bg-[linear-gradient(90deg,rgb(20_23_26/0.9)_0%,rgb(20_23_26/0.8)_42%,rgb(20_23_26/0.35)_100%)]"
-      />
-      <div className="mx-auto flex min-h-[34rem] max-w-7xl items-center px-4 pt-12 pb-16 sm:min-h-[38rem] sm:px-6 sm:pt-16 lg:min-h-[42rem] lg:px-8 lg:pt-20 lg:pb-24">
-        <div className="min-w-0 lg:max-w-[46rem]">
+    <section id="top" className="relative">
+      <div className="mx-auto grid max-w-[90rem] gap-10 px-5 pt-10 pb-16 sm:px-8 sm:pt-14 lg:grid-cols-12 lg:gap-8 lg:px-12 lg:pt-16 lg:pb-24">
+        <div className="flex min-w-0 flex-col lg:col-span-7 lg:pt-10 lg:pr-6">
           <motion.h1
-            {...enter(0)}
-            className={`font-wide ${lang === "fi" ? "text-[clamp(1.75rem,8.6vw,4.75rem)]" : "text-[clamp(2.25rem,10vw,5.25rem)]"} leading-[0.98] font-black tracking-[-0.03em] text-balance text-white`}
+            {...enter(0.05)}
+            className={`display text-charcoal ${
+              lang === "fi" ? "text-[clamp(2.6rem,10.5vw,5.6rem)]" : "text-[clamp(3.2rem,14vw,6.6rem)]"
+            } leading-[0.98] tracking-[-0.035em]`}
           >
             {t.hero.title}
           </motion.h1>
-          <RollerStroke />
-          <motion.p {...enter(0.15)} className="mt-6 max-w-xl text-lg leading-relaxed text-white/90 sm:text-xl">
+
+          <motion.p {...enter(0.2)} className="mt-8 max-w-[31rem] text-lg leading-[1.7] text-slate sm:text-xl sm:leading-[1.65]">
             {t.hero.lead}
           </motion.p>
-          <motion.div {...enter(0.25)} className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              href={`tel:${company.stig.tel}`}
-              className="inline-flex h-14 items-center justify-center gap-2.5 rounded-full bg-lime px-7 text-lg font-bold text-charcoal transition-colors hover:bg-[#9fd257]"
-            >
-              <Phone aria-hidden className="size-5" strokeWidth={2.5} />
+
+          <motion.div {...enter(0.3)} className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <a href={`tel:${company.stig.tel}`} className="btn btn-lime">
+              <Phone aria-hidden className="size-[1.1rem]" strokeWidth={2} />
               {t.call}
             </a>
-            <a
-              href="#offert"
-              className="inline-flex h-14 items-center justify-center rounded-full border-2 border-white/90 px-7 text-lg font-bold text-white transition-colors hover:bg-white hover:text-charcoal"
-            >
+            <a href="#offert" className="btn btn-line">
               {t.quote}
+              <ArrowDownRight aria-hidden className="size-[1.1rem]" strokeWidth={1.75} />
             </a>
           </motion.div>
-          <motion.p {...enter(0.3)} className="mt-4 text-sm text-white/75">
+          <motion.p {...enter(0.38)} className="mt-5 text-sm text-slate">
             {t.hero.callNote}
           </motion.p>
         </div>
+
+        <motion.div
+          className="photo aspect-[4/5] lg:col-span-5 lg:-mr-12 lg:aspect-auto lg:min-h-[42rem] lg:rounded-r-none"
+          initial={reduce ? false : { clipPath: "inset(0 0 100% 0)" }}
+          animate={{ clipPath: "inset(0 0 0% 0)" }}
+          transition={{ duration: 1.4, ease, delay: 0.15 }}
+        >
+          <motion.img
+            {...{ src: img.src, srcSet: img.srcSet, width: img.width, height: img.height }}
+            sizes="(min-width: 1024px) 42vw, 100vw"
+            alt={t.images.hero}
+            fetchPriority="high"
+            initial={reduce ? false : { scale: 1.12 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 2.2, ease, delay: 0.15 }}
+          />
+        </motion.div>
       </div>
     </section>
   );

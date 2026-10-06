@@ -1,58 +1,41 @@
 "use client";
 
-import {
-  Bath,
-  BrickWall,
-  Building,
-  Droplets,
-  Grid2x2,
-  Hammer,
-  House,
-  Layers,
-  PaintRoller,
-  Paintbrush,
-  type LucideIcon,
-} from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { serviceKeys, type ServiceKey } from "@/lib/content";
+import type { PhotoName } from "@/lib/images";
+import { Photo } from "./Photo";
 import { Reveal } from "./Reveal";
-import { SectionHeading } from "./SectionHeading";
+import { SectionLabel } from "./SectionHeading";
 
-const icons: Record<ServiceKey, LucideIcon> = {
-  paint: Paintbrush,
-  bath: Bath,
-  floor: Layers,
-  small: Hammer,
-  facade: Building,
-  roof: House,
-  joints: Grid2x2,
-  wash: Droplets,
-  chimney: BrickWall,
-};
-
-function Group({ title, icon: Icon, keys }: { title: string; icon: LucideIcon; keys: readonly ServiceKey[] }) {
+function Group({
+  title,
+  keys,
+  photo,
+  alt,
+  className = "",
+  photoClass = "",
+}: {
+  title: string;
+  keys: readonly ServiceKey[];
+  photo: PhotoName;
+  alt: string;
+  className?: string;
+  photoClass?: string;
+}) {
   const { t } = useLang();
   return (
-    <div className="rounded-3xl bg-paper p-5 sm:p-8">
-      <div className="flex items-center gap-3">
-        <span className="flex size-12 items-center justify-center rounded-2xl bg-charcoal text-lime">
-          <Icon aria-hidden className="size-6" />
-        </span>
-        <h3 className="font-wide min-w-0 text-[1.375rem] font-extrabold tracking-[-0.02em] sm:text-3xl">{title}</h3>
-      </div>
-      <ul className="mt-6 grid gap-3">
-        {keys.map((k) => {
-          const ItemIcon = icons[k];
-          return (
-            <li key={k} className="flex items-center gap-4 rounded-2xl border border-line bg-white p-4">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-lime-soft text-moss">
-                <ItemIcon aria-hidden className="size-5" />
-              </span>
-              <span className="text-lg font-semibold text-charcoal">{t.services.items[k]}</span>
+    <div className={className}>
+      <Photo name={photo} alt={alt} sizes="(min-width: 1024px) 40vw, 85vw" className={photoClass} />
+      <Reveal>
+        <h3 className="display mt-8 text-[2rem] sm:text-[2.4rem]">{title}</h3>
+        <ul className="mt-5 border-t border-charcoal/80">
+          {keys.map((k) => (
+            <li key={k} className="border-b border-line py-4 text-[1.0625rem] text-ink">
+              {t.services.items[k]}
             </li>
-          );
-        })}
-      </ul>
+          ))}
+        </ul>
+      </Reveal>
     </div>
   );
 }
@@ -60,17 +43,40 @@ function Group({ title, icon: Icon, keys }: { title: string; icon: LucideIcon; k
 export function Services() {
   const { t } = useLang();
   return (
-    <section id="tjanster" aria-labelledby="tjanster-rubrik" className="py-16 sm:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading id="tjanster-rubrik" title={t.services.title} lead={t.services.lead} />
-        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:gap-8">
-          <Reveal>
-            <Group title={t.services.indoor} icon={PaintRoller} keys={serviceKeys.indoor} />
-          </Reveal>
-          <Reveal delay={0.1}>
-            <Group title={t.services.outdoor} icon={Building} keys={serviceKeys.outdoor} />
-          </Reveal>
+    <section
+      id="tjanster"
+      aria-labelledby="tjanster-rubrik"
+      className="mx-auto max-w-[90rem] px-5 pt-24 pb-28 sm:px-8 sm:pt-36 sm:pb-40 lg:px-12"
+    >
+      <Reveal className="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-8">
+        <div className="lg:col-span-7">
+          <SectionLabel n="01" name={t.nav.services} />
+          <h2 id="tjanster-rubrik" className="display mt-6 text-[clamp(2.4rem,7.2vw,4.75rem)]">
+            {t.services.title}
+          </h2>
         </div>
+        <p className="max-w-[30rem] text-lg leading-[1.7] text-slate lg:col-span-4 lg:col-start-9 lg:pb-3">
+          {t.services.lead}
+        </p>
+      </Reveal>
+
+      <div className="mt-16 grid gap-20 sm:mt-24 lg:grid-cols-12 lg:gap-8">
+        <Group
+          title={t.services.indoor}
+          keys={serviceKeys.indoor}
+          photo="indoor"
+          alt={t.images.indoor}
+          className="lg:col-span-5"
+          photoClass="w-[88%] lg:w-full"
+        />
+        <Group
+          title={t.services.outdoor}
+          keys={serviceKeys.outdoor}
+          photo="outdoor"
+          alt={t.images.outdoor}
+          className="lg:col-span-5 lg:col-start-8 lg:mt-48"
+          photoClass="ml-auto w-[88%] lg:w-full"
+        />
       </div>
     </section>
   );

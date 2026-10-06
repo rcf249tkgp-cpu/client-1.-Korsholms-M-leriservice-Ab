@@ -1,38 +1,34 @@
 "use client";
 
-import { Users } from "lucide-react";
 import { useLang } from "@/lib/i18n";
-import { Placeholder } from "./Placeholder";
+import { Photo } from "./Photo";
 import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
 
 export function About() {
   const { t } = useLang();
   return (
-    <section id="om-oss" aria-labelledby="om-oss-rubrik" className="border-t border-line py-16 sm:py-24">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-8">
-        <Reveal className="order-last lg:order-first">
-          <Placeholder
-            label={t.about.photo}
-            tag={t.placeholder}
-            icon={Users}
-            tone="slate"
-            className="aspect-[4/3] w-full"
-          />
-        </Reveal>
-        <div>
-          <SectionHeading id="om-oss-rubrik" title={t.about.title} />
+    <section id="om-oss" aria-labelledby="om-oss-rubrik" className="grain grain-light bg-paper-deep">
+      <div className="mx-auto grid max-w-[90rem] gap-14 px-5 py-24 sm:px-8 sm:py-36 lg:grid-cols-12 lg:gap-8 lg:px-12">
+        <div className="order-last lg:order-first lg:col-span-5">
+          <Photo name="about" alt={t.images.about} sizes="(min-width: 1024px) 38vw, 100vw" className="w-[85%] lg:w-full" />
+        </div>
+        <div className="lg:col-span-6 lg:col-start-7 lg:self-center">
+          <SectionHeading n="05" name={t.nav.about} id="om-oss-rubrik" title={t.about.title} />
           <Reveal delay={0.1}>
             {t.about.body.map((p) => (
-              <p key={p} className="mt-5 max-w-xl text-lg leading-relaxed text-ink">
+              <p key={p} className="mt-6 max-w-[34rem] text-[1.0625rem] leading-[1.75] text-ink first:mt-8">
                 {p}
               </p>
             ))}
-            <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5">
-              {t.about.facts.map((f) => (
-                <div key={f.label} className="border-t-2 border-charcoal pt-3">
+            <dl className="mt-12 grid grid-cols-2 border-t border-charcoal/80">
+              {t.about.facts.map((f, i) => (
+                <div
+                  key={f.label}
+                  className={`border-b border-stone py-5 ${i % 2 === 1 ? "border-l pl-5 sm:pl-8" : "pr-4"}`}
+                >
                   <dt className="text-sm text-slate">{f.label}</dt>
-                  <dd className="mt-1 text-base font-bold text-charcoal sm:text-lg">{f.value}</dd>
+                  <dd className="display mt-2 text-[1.35rem] leading-snug sm:text-[1.6rem]">{f.value}</dd>
                 </div>
               ))}
             </dl>

@@ -9,6 +9,7 @@ import { TrustBar } from "./TrustBar";
 import { Services } from "./Services";
 import { Churches } from "./Churches";
 import { PaintAdvice } from "./PaintAdvice";
+import { ImageBand } from "./ImageBand";
 import { Gallery } from "./Gallery";
 import { About } from "./About";
 import { QuoteForm } from "./QuoteForm";
@@ -26,6 +27,7 @@ export function Site() {
           <TrustBar />
           <Services />
           <Churches />
+          <ImageBand />
           <PaintAdvice />
           <Gallery />
           <About />
