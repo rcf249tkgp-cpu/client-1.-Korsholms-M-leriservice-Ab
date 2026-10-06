@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Phone } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { company } from "@/lib/content";
-import { Placeholder } from "./Placeholder";
+import { PaintBackdrop } from "./PaintBackdrop";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -34,57 +34,53 @@ function RollerStroke() {
 export function Hero() {
   const { t, lang } = useLang();
   const reduce = useReducedMotion();
-  const enter = (delay: number) =>
-    reduce
-      ? {}
-      : {
-          initial: { opacity: 0, y: 20 },
-          animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.6, ease, delay },
-        };
+  // Always pass initial/animate: the static HTML is rendered with the initial
+  // (hidden) state, so dropping them for reduced motion would leave text invisible.
+  const enter = (delay: number) => ({
+    initial: { opacity: 0, y: reduce ? 0 : 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: reduce ? { duration: 0 } : { duration: 0.6, ease, delay },
+  });
 
   return (
-    <section id="top" className="relative">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 pt-10 pb-14 sm:px-6 sm:pt-16 lg:grid-cols-12 lg:items-center lg:gap-12 lg:px-8 lg:pt-20 lg:pb-24">
-        <div className="min-w-0 lg:col-span-7">
+    <section id="top" className="on-dark relative isolate overflow-hidden bg-charcoal text-white">
+      <PaintBackdrop className="absolute inset-0 -z-10" />
+      {/* Readability scrim: solid behind the text, lighter where the paint shows. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(20_23_26/0.62)_0%,rgb(20_23_26/0.78)_100%)] lg:bg-[linear-gradient(90deg,rgb(20_23_26/0.9)_0%,rgb(20_23_26/0.8)_42%,rgb(20_23_26/0.35)_100%)]"
+      />
+      <div className="mx-auto flex min-h-[34rem] max-w-7xl items-center px-4 pt-12 pb-16 sm:min-h-[38rem] sm:px-6 sm:pt-16 lg:min-h-[42rem] lg:px-8 lg:pt-20 lg:pb-24">
+        <div className="min-w-0 lg:max-w-[46rem]">
           <motion.h1
             {...enter(0)}
-            className={`font-wide ${lang === "fi" ? "text-[clamp(1.75rem,8.6vw,4.75rem)]" : "text-[clamp(2.25rem,10vw,5.25rem)]"} leading-[0.98] font-black tracking-[-0.03em] text-balance text-charcoal`}
+            className={`font-wide ${lang === "fi" ? "text-[clamp(1.75rem,8.6vw,4.75rem)]" : "text-[clamp(2.25rem,10vw,5.25rem)]"} leading-[0.98] font-black tracking-[-0.03em] text-balance text-white`}
           >
             {t.hero.title}
           </motion.h1>
           <RollerStroke />
-          <motion.p {...enter(0.15)} className="mt-6 max-w-xl text-lg leading-relaxed text-ink sm:text-xl">
+          <motion.p {...enter(0.15)} className="mt-6 max-w-xl text-lg leading-relaxed text-white/90 sm:text-xl">
             {t.hero.lead}
           </motion.p>
           <motion.div {...enter(0.25)} className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href={`tel:${company.stig.tel}`}
-              className="inline-flex h-14 items-center justify-center gap-2.5 rounded-full bg-lime px-7 text-lg font-bold text-charcoal transition-colors hover:bg-[#7fb534]"
+              className="inline-flex h-14 items-center justify-center gap-2.5 rounded-full bg-lime px-7 text-lg font-bold text-charcoal transition-colors hover:bg-[#9fd257]"
             >
               <Phone aria-hidden className="size-5" strokeWidth={2.5} />
               {t.call}
             </a>
             <a
               href="#offert"
-              className="inline-flex h-14 items-center justify-center rounded-full border-2 border-charcoal px-7 text-lg font-bold text-charcoal transition-colors hover:bg-charcoal hover:text-white"
+              className="inline-flex h-14 items-center justify-center rounded-full border-2 border-white/90 px-7 text-lg font-bold text-white transition-colors hover:bg-white hover:text-charcoal"
             >
               {t.quote}
             </a>
           </motion.div>
-          <motion.p {...enter(0.3)} className="mt-4 text-sm text-slate">
+          <motion.p {...enter(0.3)} className="mt-4 text-sm text-white/75">
             {t.hero.callNote}
           </motion.p>
         </div>
-
-        <motion.div {...enter(0.2)} className="min-w-0 lg:col-span-5">
-          <Placeholder
-            label={t.hero.imageLabel}
-            tag={t.placeholder}
-            tone="ink"
-            className="aspect-[4/3] w-full lg:aspect-[4/5]"
-          />
-        </motion.div>
       </div>
     </section>
   );

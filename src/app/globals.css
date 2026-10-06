@@ -66,3 +66,101 @@ section[id] {
     transparent 2px 14px
   );
 }
+
+/* Hero paint backdrop (PaintBackdrop.tsx). The default, un-animated state is the
+   fully painted wall, which is what reduced-motion users see. */
+.paint-draw {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+}
+.paint-drip {
+  opacity: 0.55;
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+}
+.paint-splat {
+  opacity: 0.5;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.paint-grain {
+  opacity: 0.16;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .paint-life {
+    animation: paint-life 14s linear var(--paint-delay, 0s) infinite both;
+  }
+  .paint-draw {
+    animation: paint-draw 14s linear var(--paint-delay, 0s) infinite both;
+  }
+  .paint-drip {
+    animation: paint-drip 14s linear -11.6s infinite both;
+  }
+  .paint-splat {
+    animation: paint-splat 14s ease-in-out var(--paint-delay, 0s) infinite both;
+  }
+  .paint-backdrop[data-paused] * {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes paint-draw {
+  0% {
+    stroke-dashoffset: 1;
+    animation-timing-function: cubic-bezier(0.45, 0.05, 0.25, 1);
+  }
+  21%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes paint-life {
+  0%,
+  66% {
+    opacity: 1;
+  }
+  84%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes paint-drip {
+  0%,
+  8% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  12% {
+    opacity: 0.55;
+  }
+  40% {
+    opacity: 0.55;
+    transform: scaleY(1);
+  }
+  56%,
+  100% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+}
+@keyframes paint-splat {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  6% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  40% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  60% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
