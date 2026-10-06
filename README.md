@@ -6,10 +6,11 @@ One-page Next.js + Tailwind site with a SV/FI language toggle and Framer Motion 
 ```bash
 npm install
 npm run dev     # http://localhost:3000  (append ?lang=fi for the Finnish version)
-npm run build
+npm run build   # static export to ./out
 ```
 
-Deploys to Vercel as-is (framework preset: Next.js, no env vars).
+The site is a static export (`output: "export"`), deployed to Cloudflare Workers as static assets via `wrangler.jsonc`
+(build command `npm run build`, deploy command `npx wrangler deploy`).
 
 ## Before going live
 - Replace every "Platshållare" image (hero, gallery, team photo) with KMS's own photos.
